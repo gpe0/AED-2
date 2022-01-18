@@ -6,7 +6,7 @@ using namespace std;
 int main() {
     cout << "AED 2021/2022 - Projeto 2" << endl;
     ReadCsv reader;
-    reader.readStops("../Dataset/stops.csv");
-    reader.getStops();
+    reader.readLine("505", "0");
+    reader.getLine();
     return 0;
 }

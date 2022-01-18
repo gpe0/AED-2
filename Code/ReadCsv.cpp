@@ -8,12 +8,28 @@ void ReadCsv::readStops(string file) {
         stops.push_back(content);
 
     }
-    return;
 }
+
+void ReadCsv::readLine(string code, string dir) {
+    string content;
+    file = "../Dataset/line_" + code + "_" + dir + ".csv";
+
+    ifstream  myFile(file);
+
+    while (getline(myFile, content)) {
+        line.push_back(content);
+    }
+}
+
 
 void ReadCsv::getStops() {
     for (size_t i = 0; i < stops.size(); i++) {
         cout << stops[i] << endl;
     }
-    return;
+}
+
+void ReadCsv::getLine() {
+    for (size_t i = 0; i < line.size(); i++) {
+        cout << line[i] << endl;
+    }
 }
