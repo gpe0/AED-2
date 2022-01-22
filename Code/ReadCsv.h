@@ -5,21 +5,16 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include "Stop.h"
+#include "Line.h"
 
 using namespace std;
 
 class ReadCsv {
-private:
-    string file;
-    string code, name, zone, latitude, longitude;
-    vector<string> stops;
-    vector<string> line;
-
 public:
-    void readStops(string file);
-    void readLine(string code, string dir);
-    void getStops();
-    void getLine();
+    void readStops(vector<Stop>& stops);
+    void readLines(vector<Line>& lines, bool nightShift);
+    void readLine(string code, string dir, vector<string>& codes);
 };
 
 

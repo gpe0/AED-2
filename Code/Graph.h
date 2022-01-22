@@ -6,26 +6,31 @@
 #include <vector>
 #include <iostream>
 #include "MinHeap.h"
+#include "Line.h"
 
 class Graph {
 
     struct Edge {
         int dest;   // Destination node
-        int weight; // An integer weight
-        std::string line;
+        double weight; // An integer weight
+        Line line;
     };
 
     struct Node {
         std::list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
-        int dist;
+        double dist;
         int pred;
+        Line predLine;
         bool visited;
-        std::string name;
+        std::string code, name, zone;
+        double latitude, longitude;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
     bool hasDir;        // false: undirect; true: directed
     std::vector<Node> nodes; // The list of nodes being represented
+
+    void dijkstra(int s, double w = 0);
 
 
 public:
@@ -33,11 +38,12 @@ public:
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int weight = 1);
+    void addEdge(int src, int dest, Line line, double weight = 1);
+
 
     // Shortest paths finder
-    int dijkstra_distance(int a, int b);
-    std::list<int> dijkstra_path(int a, int b);
+    double dijkstra_distance(int a, int b, double w = 0);
+    std::list<int> dijkstra_path(int a, int b, list<Line>& currentLine, double  w = 0);
 };
 
 
