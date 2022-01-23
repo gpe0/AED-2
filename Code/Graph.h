@@ -19,6 +19,7 @@ class Graph {
     struct Node {
         std::list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         double dist;
+        double backDist;
         int pred;
         Line predLine;
         bool visited;
@@ -30,8 +31,7 @@ class Graph {
     bool hasDir;        // false: undirect; true: directed
     std::vector<Node> nodes; // The list of nodes being represented
 
-    void dijkstra(int s, double w = 0);
-
+    void dijkstra(int s, int choice, double w = 0);
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
@@ -42,8 +42,8 @@ public:
 
 
     // Shortest paths finder
-    double dijkstra_distance(int a, int b, double w = 0);
-    std::list<int> dijkstra_path(int a, int b, list<Line>& currentLine, double  w = 0);
+    double dijkstra_distance(int a, int b, list<Line>& currentLine, int choice, double w = 0);
+    std::list<int> dijkstra_path(int a, int b, list<Line>& currentLine, int choice, double  w = 0);
 };
 
 

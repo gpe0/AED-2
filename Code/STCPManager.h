@@ -6,6 +6,7 @@
 #include "ReadCsv.h"
 #include "Stop.h"
 #include "Line.h"
+#include "Trip.h"
 
 class STCPManager {
 private:
@@ -19,10 +20,10 @@ public:
     STCPManager();
     double distanceBeetweenTwoPoints(double lat1, double lon1, double lat2, double lon2);
     void generateGraph();
-    list<string> pathBeetweenStops(string a, string b);
-    list<string> pathBeetweenStops(double lat1, double lon1, string b);
-    list<string> pathBeetweenStops(double lat1, double lon1, double lat2, double lon2);
-    list<string> pathBeetweenStops(string a, double lat2, double lon2);
+    Trip pathBeetweenStops(string a, string b, int choice = 1); // 1 - best distance // 2 - fewer lines
+    Trip pathBeetweenStops(double lat1, double lon1, string b, double walkable, int choice = 1);
+    Trip pathBeetweenStops(double lat1, double lon1, double lat2, double lon2, double walkable, int choice = 1);
+    Trip pathBeetweenStops(string a, double lat2, double lon2, double walkable, int choice = 1);
     ~STCPManager();
 };
 
