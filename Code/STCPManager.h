@@ -20,7 +20,7 @@ private:
     vector<Line> lineList;
 
 public:
-    STCPManager(int choice, double walkableBeetweenStops, double walkableToFromStops);
+    STCPManager(int choice, double walkableBeetweenStops, double walkableToFromStops, bool nightShift);
     double distanceBeetweenTwoPoints(double lat1, double lon1, double lat2, double lon2);
     void generateGraph();
     void clearGraph();

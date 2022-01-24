@@ -33,6 +33,8 @@ class Graph {
 
     void dijkstra(int s, int choice, double w = 0);
 
+    void bfs(int i);
+
 public:
     // Constructor: nr nodes and direction (default: undirected)
     Graph(int nodes, bool dir = false);
@@ -42,6 +44,8 @@ public:
 
 
     // Shortest paths finder
+    double bfs_distance(int a, int b);
+    std::list<int> bfs_path(int a, int b, list<Line>& currentLine);
     double dijkstra_distance(int a, int b, list<Line>& currentLine, int choice, double w = 0);
     std::list<int> dijkstra_path(int a, int b, list<Line>& currentLine, int choice, double  w = 0);
 };

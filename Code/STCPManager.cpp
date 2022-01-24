@@ -6,12 +6,12 @@
 
 using namespace std;
 
-STCPManager::STCPManager(int choice, double walkableBeetweenStops, double walkableToFromStops) {
+STCPManager::STCPManager(int choice, double walkableBeetweenStops, double walkableToFromStops, bool nightShift) {
     this->choice = choice;
     this->walkableBeetweenStops = walkableBeetweenStops;
     this->walkableToFromStops = walkableToFromStops;
     reader.readStops(stopList);
-    reader.readLines(lineList, false);
+    reader.readLines(lineList, nightShift);
     this->stops = new Graph(stopList.size(), true);
 
     int num = 1;
@@ -62,14 +62,17 @@ void STCPManager::generateGraph() {
 
         for (int i = 1; i < codes.size(); i++) {
             double weight = distanceBeetweenTwoPoints(stopList[codeToInt[codes[i - 1]] - 1].getLatitude(), stopList[codeToInt[codes[i - 1]] - 1].getLongitude(), stopList[codeToInt[codes[i]] - 1].getLatitude(), stopList[codeToInt[codes[i]] - 1].getLongitude());
-            stops->addEdge(codeToInt[codes[i - 1]], codeToInt[codes[i]], line, weight);
+            if (choice == 0) stops->addEdge(codeToInt[codes[i - 1]], codeToInt[codes[i]], line);
+            else stops->addEdge(codeToInt[codes[i - 1]], codeToInt[codes[i]], line, weight);
+
         }
         codes.clear();
 
         reader.readLine(line.getCode(), "1", codes);
         for (int i = 1; i < codes.size(); i++) {
             double weight = distanceBeetweenTwoPoints(stopList[codeToInt[codes[i - 1]] - 1].getLatitude(), stopList[codeToInt[codes[i - 1]] - 1].getLongitude(), stopList[codeToInt[codes[i]] - 1].getLatitude(), stopList[codeToInt[codes[i]] - 1].getLongitude());
-            stops->addEdge(codeToInt[codes[i - 1]], codeToInt[codes[i]], line, weight);
+            if (choice == 0) stops->addEdge(codeToInt[codes[i - 1]], codeToInt[codes[i]], line);
+            else stops->addEdge(codeToInt[codes[i - 1]], codeToInt[codes[i]], line, weight);
         }
     }
     if (choice < 3) return;
@@ -86,11 +89,16 @@ void STCPManager::generateGraph() {
 Trip STCPManager::pathBeetweenStops(string a, string b) {
     list<string> stopsPath;
     list<Line> linesPath;
-    list<int> aux = stops->dijkstra_path(codeToInt[a], codeToInt[b], linesPath, choice);
-    double distance = stops->dijkstra_distance(codeToInt[a], codeToInt[b], linesPath, choice);
+    list<int> aux;
+    double distance;
+    if (choice == 0) aux = stops->bfs_path(codeToInt[a], codeToInt[b], linesPath);
+    else aux = stops->dijkstra_path(codeToInt[a], codeToInt[b], linesPath, choice);
+
+     if (choice == 0) distance = stops->bfs_distance(codeToInt[a], codeToInt[b]);
+     else distance = stops->dijkstra_distance(codeToInt[a], codeToInt[b], linesPath, choice);
 
     for (const auto & element : aux) {
-        stopsPath.push_back(stopList[element - 1].getCode() );
+        stopsPath.push_back(stopList[element - 1].getCode());
     }
 
     Trip trip(stopsPath, linesPath, distance);

@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <climits>
+#include <queue>
 
 #define INF (INT_MAX/2)
 
@@ -50,6 +51,29 @@ void Graph::dijkstra(int s, int choice, double w) {
     }
 }
 
+void Graph::bfs(int v) {
+    for (int v = 1; v <= n; v++) nodes[v]. visited = false;
+    queue<int> q;
+    q.push(v);
+    nodes[v].dist = 1;
+    nodes[v].visited = true;
+    nodes[v].pred = v;
+    while (!q.empty ()) {
+        int u = q.front (); q.pop ();
+        for (auto e : nodes[u]. adj) {
+            int w = e.dest;
+            if (! nodes[w]. visited) {
+                q.push(w);
+                nodes[w].visited = true;
+                nodes[w].dist = nodes[u].dist + 1;
+                nodes[w].pred = u;
+                nodes[w].predLine = e.line;
+            }
+        }
+    }
+}
+
+
 double Graph::dijkstra_distance(int a, int b, list<Line>& currentLine, int choice, double w) {
     dijkstra(a, choice ,w);
     if (nodes[b].dist == INF) return -1;
@@ -61,6 +85,27 @@ list<int> Graph::dijkstra_path(int a, int b, list<Line>& currentLine, int choice
     list<int> path;
 
     if (nodes[b].dist == INF) return path;
+    path.push_back(b);
+    currentLine.push_back(nodes[b].predLine);
+    int v = b;
+    while (v != a) {
+        v = nodes[v].pred;
+        path.push_front(v);
+        if (v != a) currentLine.push_front(nodes[v].predLine);
+    }
+    return path;
+}
+
+double Graph::bfs_distance(int a, int b) {
+    bfs(a);
+    if (a != b && !nodes[b].visited) return -1;
+    return nodes[b].dist;
+}
+
+std::list<int> Graph::bfs_path(int a, int b, list<Line> &currentLine) {
+    bfs(a);
+    list<int> path;
+    if (a != b && !nodes[b].visited) return path;
     path.push_back(b);
     currentLine.push_back(nodes[b].predLine);
     int v = b;
