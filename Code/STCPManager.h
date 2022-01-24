@@ -10,6 +10,9 @@
 
 class STCPManager {
 private:
+    int choice;
+    double walkableBeetweenStops;
+    double walkableToFromStops;
     ReadCsv reader;
     Graph *stops;
     map<string, int> codeToInt;
@@ -17,13 +20,17 @@ private:
     vector<Line> lineList;
 
 public:
-    STCPManager();
+    STCPManager(int choice, double walkableBeetweenStops, double walkableToFromStops);
     double distanceBeetweenTwoPoints(double lat1, double lon1, double lat2, double lon2);
     void generateGraph();
-    Trip pathBeetweenStops(string a, string b, int choice = 1); // 1 - best distance // 2 - fewer lines
-    Trip pathBeetweenStops(double lat1, double lon1, string b, double walkable, int choice = 1);
-    Trip pathBeetweenStops(double lat1, double lon1, double lat2, double lon2, double walkable, int choice = 1);
-    Trip pathBeetweenStops(string a, double lat2, double lon2, double walkable, int choice = 1);
+    void clearGraph();
+    void setChoice(int choice);
+    void setWalkableBeetweenStops(double walkableBeetweenStops);
+    void setWalkableToFromStops(double walkableToFromStops);
+    Trip pathBeetweenStops(string a, string b); // 1 - best distance // 2 - fewer lines
+    Trip pathBeetweenStops(double lat1, double lon1, string b);
+    Trip pathBeetweenStops(double lat1, double lon1, double lat2, double lon2);
+    Trip pathBeetweenStops(string a, double lat2, double lon2);
     ~STCPManager();
 };
 

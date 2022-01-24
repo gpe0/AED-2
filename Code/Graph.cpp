@@ -35,7 +35,7 @@ void Graph::dijkstra(int s, int choice, double w) {
             double w = edge.weight;
             if (!nodes[v].visited && nodes[u].backDist + w < nodes[v].backDist) {
                 nodes[v].predLine = edge.line;
-                if (choice == 2 && nodes[v].predLine.getCode() != nodes[u].predLine.getCode()){
+                if ((choice == 2 || choice == 4) && nodes[v].predLine.getCode() != nodes[u].predLine.getCode()){
                     nodes[v].backDist = nodes[u].backDist + w + 50;
                 }
                 else nodes[v].backDist = nodes[u].backDist + w;

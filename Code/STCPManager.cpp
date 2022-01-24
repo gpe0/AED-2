@@ -6,7 +6,10 @@
 
 using namespace std;
 
-STCPManager::STCPManager() {
+STCPManager::STCPManager(int choice, double walkableBeetweenStops, double walkableToFromStops) {
+    this->choice = choice;
+    this->walkableBeetweenStops = walkableBeetweenStops;
+    this->walkableToFromStops = walkableToFromStops;
     reader.readStops(stopList);
     reader.readLines(lineList, false);
     this->stops = new Graph(stopList.size(), true);
@@ -32,7 +35,25 @@ double STCPManager::distanceBeetweenTwoPoints(double lat1, double lon1, double l
     return earthR * c;
 }
 
+void STCPManager::setChoice(int choice) {
+    this->choice = choice;
+}
+
+void STCPManager::setWalkableBeetweenStops(double walkableBeetweenStops) {
+    this->walkableBeetweenStops = walkableBeetweenStops;
+}
+
+void STCPManager::setWalkableToFromStops(double walkableToFromStops) {
+    this->walkableToFromStops = walkableToFromStops;
+}
+
+void STCPManager::clearGraph() {
+    delete stops;
+    this->stops = new Graph(stopList.size(), true);
+}
+
 void STCPManager::generateGraph() {
+
 
     for (Line line : lineList) {
         vector<string> codes;
@@ -51,9 +72,18 @@ void STCPManager::generateGraph() {
             stops->addEdge(codeToInt[codes[i - 1]], codeToInt[codes[i]], line, weight);
         }
     }
+    if (choice < 3) return;
+
+    Line l("WALK", "Just Walking");
+    for (Stop stop1: stopList) {
+        for (Stop stop2: stopList) {
+            double dist = distanceBeetweenTwoPoints(stop1.getLatitude(), stop1.getLongitude(), stop2.getLatitude(), stop2.getLongitude());
+            if (dist <= walkableBeetweenStops) stops->addEdge(codeToInt[stop1.getCode()], codeToInt[stop2.getCode()], l, dist);
+        }
+    }
 }
 
-Trip STCPManager::pathBeetweenStops(string a, string b, int choice) {
+Trip STCPManager::pathBeetweenStops(string a, string b) {
     list<string> stopsPath;
     list<Line> linesPath;
     list<int> aux = stops->dijkstra_path(codeToInt[a], codeToInt[b], linesPath, choice);
@@ -68,7 +98,7 @@ Trip STCPManager::pathBeetweenStops(string a, string b, int choice) {
     return trip;
 }
 
-Trip STCPManager::pathBeetweenStops(double lat1, double lon1, string b, double walkable, int choice) {
+Trip STCPManager::pathBeetweenStops(double lat1, double lon1, string b) {
     list<string> stopsPath;
     list<Line> linesPath;
     list<Line> bestLine;
@@ -76,7 +106,7 @@ Trip STCPManager::pathBeetweenStops(double lat1, double lon1, string b, double w
     double bestDistance = INF;
     for (Stop stop : stopList) {
         double distance = distanceBeetweenTwoPoints(lat1, lon1, stop.getLatitude(), stop.getLongitude());
-        if (distance >= walkable) continue;
+        if (distance >= walkableToFromStops) continue;
         linesPath.clear();
         list<int> newPath = stops->dijkstra_path(codeToInt[stop.getCode()], codeToInt[b],linesPath, choice, distance);
         double newDistance = stops->dijkstra_distance(codeToInt[stop.getCode()], codeToInt[b], linesPath, choice, distance);
@@ -96,7 +126,7 @@ Trip STCPManager::pathBeetweenStops(double lat1, double lon1, string b, double w
     return trip;
 }
 
-Trip STCPManager::pathBeetweenStops(double lat1, double lon1, double lat2, double lon2, double walkable, int choice) {
+Trip STCPManager::pathBeetweenStops(double lat1, double lon1, double lat2, double lon2) {
     list<string> stopsPath;
     list<Line> linesPath;
     list<Line> bestLine;
@@ -104,10 +134,10 @@ Trip STCPManager::pathBeetweenStops(double lat1, double lon1, double lat2, doubl
     double bestDistance = INF;
     for (Stop stop1 : stopList) {
         double distance1 = distanceBeetweenTwoPoints(lat2, lon2, stop1.getLatitude(), stop1.getLongitude());
-        if (distance1 >= walkable) continue;
+        if (distance1 >= walkableToFromStops) continue;
         for (Stop stop2: stopList) {
             double distance2 = distanceBeetweenTwoPoints(lat1, lon1, stop2.getLatitude(), stop2.getLongitude());
-            if (distance2 >= walkable) continue;
+            if (distance2 >= walkableToFromStops) continue;
             linesPath.clear();
             list<int> newPath = stops->dijkstra_path(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()], linesPath, choice, distance2);
             double newDistance = stops->dijkstra_distance(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()], linesPath, choice ,distance2) + distance1;
@@ -129,7 +159,7 @@ Trip STCPManager::pathBeetweenStops(double lat1, double lon1, double lat2, doubl
 
 }
 
-Trip STCPManager::pathBeetweenStops(string a, double lat2, double lon2, double walkable, int choice) {
+Trip STCPManager::pathBeetweenStops(string a, double lat2, double lon2) {
     list<string> stopsPath;
     list<Line> linesPath;
     list<Line> bestLine;
@@ -137,7 +167,7 @@ Trip STCPManager::pathBeetweenStops(string a, double lat2, double lon2, double w
     double bestDistance = INF;
     for (Stop stop : stopList) {
         double distance = distanceBeetweenTwoPoints(lat2, lon2, stop.getLatitude(), stop.getLongitude());
-        if (distance >= walkable) continue;
+        if (distance >= walkableToFromStops) continue;
         linesPath.clear();
         list<int> newPath = stops->dijkstra_path(codeToInt[a], codeToInt[stop.getCode()], linesPath, choice);
 
