@@ -14,6 +14,7 @@ class Graph {
         int dest;   // Destination node
         double weight; // An integer weight
         Line line;
+        std::string originZone, destinationZone;
     };
 
     struct Node {
@@ -22,9 +23,8 @@ class Graph {
         double backDist;
         int pred;
         Line predLine;
+        int difZones;
         bool visited;
-        std::string code, name, zone;
-        double latitude, longitude;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -40,14 +40,14 @@ public:
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, Line line, double weight = 1);
+    void addEdge(int src, int dest, Line line, std::string originZone, std::string destinationZone, double weight = 1);
 
 
     // Shortest paths finder
     double bfs_distance(int a, int b);
-    std::list<int> bfs_path(int a, int b, list<Line>& currentLine);
+    std::list<int> bfs_path(int a, int b, list<Line>& currentLine, int & difZones);
     double dijkstra_distance(int a, int b, list<Line>& currentLine, int choice, double w = 0);
-    std::list<int> dijkstra_path(int a, int b, list<Line>& currentLine, int choice, double  w = 0);
+    std::list<int> dijkstra_path(int a, int b, list<Line>& currentLine, int & difZones, int choice, double  w = 0);
 };
 
 

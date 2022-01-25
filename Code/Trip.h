@@ -9,13 +9,15 @@ class Trip {
     std::list<std::string> stopsPath;
     std::list<Line> linesPath;
     double distance;
+    int difZones;
 
 public:
-    Trip(std::list<std::string> stopsPath, std::list<Line> linesPath, double distance);
+    Trip(std::list<std::string> stopsPath, std::list<Line> linesPath, double distance, int difZones);
 
     std::list<std::string> getStopsPath();
     std::list<Line> getLinesPath();
     double getDistance();
+    int getDifZones();
 };
 
 

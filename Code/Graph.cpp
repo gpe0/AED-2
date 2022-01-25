@@ -9,10 +9,10 @@ Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
 }
 
 // Add edge from source to destination with a certain weight
-void Graph::addEdge(int src, int dest, Line line ,double weight) {
+void Graph::addEdge(int src, int dest, Line line, std::string originZone, std::string destinationZone, double weight) {
     if (src<1 || src>n || dest<1 || dest>n) return;
-    nodes[src].adj.push_back({dest, weight, line});
-    if (!hasDir) nodes[dest].adj.push_back({src, weight, line});
+    nodes[src].adj.push_back({dest, weight, line, originZone, destinationZone});
+    if (!hasDir) nodes[dest].adj.push_back({src, weight, line, originZone, destinationZone});
 }
 
 void Graph::dijkstra(int s, int choice, double w) {
@@ -26,6 +26,7 @@ void Graph::dijkstra(int s, int choice, double w) {
     nodes[s].backDist = w;
     nodes[s].dist = w;
     nodes[s].pred = s;
+    nodes[s].difZones = 1;
     minHeap.decreaseKey(s,0);
 
     while (minHeap.getSize() > 0) {
@@ -40,6 +41,12 @@ void Graph::dijkstra(int s, int choice, double w) {
                     nodes[v].backDist = nodes[u].backDist + w + 50;
                 }
                 else nodes[v].backDist = nodes[u].backDist + w;
+
+                if (edge.originZone != edge.destinationZone) {
+                    if ((choice == 3 || choice == 4)) nodes[v].backDist = nodes[u].backDist + w + 50;
+                    nodes[v].difZones = nodes[u].difZones + 1;
+                } else nodes[v].difZones = nodes[u].difZones;
+
 
                 nodes[v].dist = nodes[u].dist + w;
 
@@ -58,6 +65,7 @@ void Graph::bfs(int v) {
     nodes[v].dist = 1;
     nodes[v].visited = true;
     nodes[v].pred = v;
+    nodes[v].difZones = 1;
     while (!q.empty ()) {
         int u = q.front (); q.pop ();
         for (auto e : nodes[u]. adj) {
@@ -68,6 +76,8 @@ void Graph::bfs(int v) {
                 nodes[w].dist = nodes[u].dist + 1;
                 nodes[w].pred = u;
                 nodes[w].predLine = e.line;
+                if (e.originZone != e.destinationZone) nodes[w].difZones = nodes[u].difZones + 1;
+                else nodes[w].difZones = nodes[u].difZones;
             }
         }
     }
@@ -80,11 +90,12 @@ double Graph::dijkstra_distance(int a, int b, list<Line>& currentLine, int choic
     return nodes[b].dist;
 }
 
-list<int> Graph::dijkstra_path(int a, int b, list<Line>& currentLine, int choice, double w) {
+list<int> Graph::dijkstra_path(int a, int b, list<Line>& currentLine, int & difZones, int choice, double w) {
     dijkstra(a, choice , w);
     list<int> path;
 
     if (nodes[b].dist == INF) return path;
+    difZones = nodes[b].difZones;
     path.push_back(b);
     currentLine.push_back(nodes[b].predLine);
     int v = b;
@@ -102,12 +113,13 @@ double Graph::bfs_distance(int a, int b) {
     return nodes[b].dist;
 }
 
-std::list<int> Graph::bfs_path(int a, int b, list<Line> &currentLine) {
+std::list<int> Graph::bfs_path(int a, int b, list<Line> &currentLine, int & difZones) {
     bfs(a);
     list<int> path;
     if (a != b && !nodes[b].visited) return path;
     path.push_back(b);
     currentLine.push_back(nodes[b].predLine);
+    difZones = nodes[b].difZones;
     int v = b;
     while (v != a) {
         v = nodes[v].pred;

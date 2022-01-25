@@ -1,9 +1,10 @@
 #include "Trip.h"
 
-Trip::Trip(std::list<std::string> stopsPath, std::list<Line> linesPath, double distance) {
+Trip::Trip(std::list<std::string> stopsPath, std::list<Line> linesPath, double distance, int difZones) {
     this->stopsPath = stopsPath;
     this->linesPath = linesPath;
     this->distance = distance;
+    this->difZones = difZones;
 }
 
 std::list<std::string> Trip::getStopsPath() {
@@ -16,4 +17,8 @@ std::list<Line> Trip::getLinesPath() {
 
 double Trip::getDistance() {
     return distance;
+}
+
+int Trip::getDifZones() {
+    return difZones;
 }
