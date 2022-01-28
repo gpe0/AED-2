@@ -1,9 +1,8 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef AED_2_MAP_H
+#define AED_2_MAP_H
 
-#include <iostream>
-#include <fstream>
 #include <string>
+#include "Stop.h"
 
 class Map {
 private:
@@ -21,4 +20,6 @@ public:
         std::string what() const {return msg;};
     };
 };
+
+
 #endif

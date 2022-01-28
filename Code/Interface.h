@@ -25,6 +25,12 @@ class Interface {
      * @param mode user's choice
      */
     static void printTripInfo(Trip trip, int mode);
+
+    /**Exports the information about a trip to files (csv and html)
+     *
+     * @param trip trip
+     */
+    static void exportData(Trip trip, int mode);
 public:
     /**Runs the menu loop
      *

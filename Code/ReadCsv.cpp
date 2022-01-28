@@ -4,7 +4,7 @@
 
 void ReadCsv::readStops(vector<Stop>& stops) {
     string content;
-    string file = "../Dataset/stops.csv";
+    string file = "../PersistentMemory/stops.csv";
     ifstream myFile(file);
     getline(myFile, content);
     while (getline(myFile, content)) {
@@ -31,7 +31,7 @@ void ReadCsv::readStops(vector<Stop>& stops) {
 
 void ReadCsv::readLines(vector<Line> &lines, bool nightShift) {
     string content;
-    string file = "../Dataset/lines.csv";
+    string file = "../PersistentMemory/lines.csv";
     ifstream myFile(file);
     while (getline(myFile, content)) {
         stringstream stream(content);
@@ -47,7 +47,7 @@ void ReadCsv::readLines(vector<Line> &lines, bool nightShift) {
 
 void ReadCsv::readLine(string code, string dir, vector<string>& codes) {
     string content;
-    string file = "../Dataset/line_" + code + "_" + dir + ".csv";
+    string file = "../PersistentMemory/lines/line_" + code + "_" + dir + ".csv";
 
     ifstream  myFile(file);
     getline(myFile, content);

@@ -4,20 +4,24 @@
 #include <string>
 #include <list>
 #include "Line.h"
+#include "Stop.h"
 
 class Trip {
-    std::list<std::string> stopsPath;
+    std::list<Stop> stopsPath;
     std::list<Line> linesPath;
     double distance;
     int difZones;
 
 public:
-    Trip(std::list<std::string> stopsPath, std::list<Line> linesPath, double distance, int difZones);
+    Trip();
+    Trip(std::list<Stop> stopsPath, std::list<Line> linesPath, double distance, int difZones);
 
-    std::list<std::string> getStopsPath();
+    std::list<Stop> getStopsPath();
     std::list<Line> getLinesPath();
     double getDistance();
     int getDifZones();
+
+    Trip& operator=(const Trip& trip);
 };
 
 

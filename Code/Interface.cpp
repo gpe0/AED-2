@@ -1,6 +1,8 @@
 #include "Interface.h"
 #include <iostream>
+#include <fstream>
 #include "STCPManager.h"
+#include "Map.h"
 using namespace std;
 
 void Interface::drawMenu() {
@@ -75,14 +77,14 @@ void Interface::simulateTrip(STCPManager* manager, int mode) {
         cout << "Opcao: " << flush;
         cin >> choice;
     }
+    Trip trip;
     if (choice == 0){
         string oCode, dCode;
         cout << "Paragem de origem: " << flush;
         cin >> oCode;
         cout << "Paragem de destino: " << flush;
         cin >> dCode;
-        Trip trip = manager->pathBeetweenStops(oCode, dCode);
-        printTripInfo(trip, mode);
+        trip = manager->pathBetweenStops(oCode, dCode);
     }
     else if (choice == 1) {
         double lat, lon;
@@ -93,8 +95,7 @@ void Interface::simulateTrip(STCPManager* manager, int mode) {
         cin >> lon;
         cout << "Paragem de destino: " << flush;
         cin >> dCode;
-        Trip trip = manager->pathBeetweenStops(lat, lon, dCode);
-        printTripInfo(trip, mode);
+        trip = manager->pathBetweenStops(lat, lon, dCode);
     }
     else if (choice == 2) {
         double lat, lon;
@@ -105,8 +106,7 @@ void Interface::simulateTrip(STCPManager* manager, int mode) {
         cin >> lat;
         cout << "Longitude de destino: " << flush;
         cin >> lon;
-        Trip trip = manager->pathBeetweenStops(oCode, lat, lon);
-        printTripInfo(trip, mode);
+        trip = manager->pathBetweenStops(oCode, lat, lon);
     }
     else {
         double lat1, lon1, lat2, lon2;
@@ -118,26 +118,78 @@ void Interface::simulateTrip(STCPManager* manager, int mode) {
         cin >> lat2;
         cout << "Longitude de destino: " << flush;
         cin >> lon2;
-        Trip trip = manager->pathBeetweenStops(lat1, lon1, lat2, lon2);
-        printTripInfo(trip, mode);
+        trip = manager->pathBetweenStops(lat1, lon1, lat2, lon2);
     }
+    string res;
+    cout << "Exportar informacao da viagem [Y/N]: " << flush;
+    cin >> res;
+    if (res[0] == 'Y' || res[0] == 'y') exportData(trip, mode);
+
+    printTripInfo(trip, mode);
 }
 
 void Interface::printTripInfo(Trip trip, int mode) {
-    if (mode == 0) cout << "Numero de paragens: " << trip.getDistance() << endl;
-    else cout << "Distancia total (Km): " << trip.getDistance() << endl;
-    cout << "Zonas: " << trip.getDifZones() << endl;
-    list<Line> lines = trip.getLinesPath();
-    auto lineIt = lines.begin();
 
+    if (trip.getStopsPath().size() == 0) cout << "Sem caminho!" << endl;
+    else {
+        if (mode == 0) cout << "Numero de paragens: " << trip.getDistance() << endl;
+        else cout << "Distancia total (Km): " << trip.getDistance() << endl;
+        cout << "Zonas: " << trip.getDifZones() << endl;
+        list<Line> lines = trip.getLinesPath();
+        auto lineIt = lines.begin();
 
-    for (auto ele : trip.getStopsPath()) {
-        string line = "";
-        if (lineIt != lines.end()) {
-            line = " (" + lineIt->getCode() + ")";
-            lineIt++;
+        for (auto ele: trip.getStopsPath()) {
+            string line = "";
+            if (lineIt != lines.end()) {
+                line = " (" + lineIt->getCode() + ")";
+                lineIt++;
+            }
+            cout << ele.getCode() << line << " -> " << flush;
         }
-        cout << ele << line << " -> "<< flush;
+        cout << "chegada!" << endl;
     }
-    cout << "chegada!" << endl;
+}
+
+void Interface::exportData(Trip trip, int mode) {
+    string generalInfo = "../Output/generalInfo.csv";
+    string stopList = "../Output/stopList.csv";
+    string lineList = "../Output/lineList.csv";
+    string tripMap = "../Output/tripMap.html";
+
+    Map map;
+
+    ofstream f(generalInfo);
+    if (f.is_open()) {
+        f << "Primeira Paragem,Última Paragem,Distância Total,Zonas,Número de paragens" << endl;
+        f << trip.getStopsPath().front().getCode()  << "," << trip.getStopsPath().back().getCode() << "," << flush;
+        if (mode == 0) f << "---," << flush;
+        else f << trip.getDistance() << "," << flush;
+        f << trip.getDifZones() << "," << trip.getStopsPath().size() << endl;
+    }
+    f.close();
+    f.open(stopList);
+    if (f.is_open()) {
+        f << "Código da Paragem,Nome da Paragem" << endl;
+        list<Stop> stops = trip.getStopsPath();
+        for (auto it = stops.begin(); it != stops.end(); it++) {
+            f << it->getCode() << "," << it->getName() << endl;
+            map.addStop(*it);
+            auto next = it++;
+            it--;
+            if (next != stops.end()) map.addConnection(*it, *next);
+        }
+
+    }
+    f.close();
+    f.open(lineList);
+    if (f.is_open()) {
+        f << "Código da Linha,Nome da Linha" << endl;
+        for (auto line : trip.getLinesPath())
+            f << line.getCode() << "," << line.getName() << endl;
+    }
+
+    f.close();
+    f.open(tripMap);
+    if (f.is_open()) f << map.getHTML() << endl;
+    f.close();
 }
