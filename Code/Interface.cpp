@@ -160,22 +160,23 @@ void Interface::exportData(Trip trip, int mode) {
 
     ofstream f(generalInfo);
     if (f.is_open()) {
-        f << "Primeira Paragem,Última Paragem,Distância Total,Zonas,Número de paragens" << endl;
-        f << trip.getStopsPath().front().getCode()  << "," << trip.getStopsPath().back().getCode() << "," << flush;
-        if (mode == 0) f << "---," << flush;
-        else f << trip.getDistance() << "," << flush;
-        f << trip.getDifZones() << "," << trip.getStopsPath().size() << endl;
+        f << "Primeira Paragem,Ultima Paragem,Distancia Total,Zonas,Numero de paragens" << endl;
+        if(trip.getStopsPath().size() != 0) {
+            f << trip.getStopsPath().front().getCode() << "," << trip.getStopsPath().back().getCode() << "," << flush;
+            if (mode == 0) f << "---," << flush;
+            else f << trip.getDistance() << "," << flush;
+            f << trip.getDifZones() << "," << trip.getStopsPath().size() << endl;
+        }
     }
     f.close();
     f.open(stopList);
     if (f.is_open()) {
-        f << "Código da Paragem,Nome da Paragem" << endl;
+        f << "Codigo da Paragem,Nome da Paragem,Zona,Latitude,Longitude" << endl;
         list<Stop> stops = trip.getStopsPath();
         for (auto it = stops.begin(); it != stops.end(); it++) {
-            f << it->getCode() << "," << it->getName() << endl;
+            f << it->getCode() << "," << it->getName() << "," << it->getZone() << "," << it->getLatitude() << "," << it->getLongitude() << endl;
             map.addStop(*it);
-            auto next = it++;
-            it--;
+            auto next = std::next(it, 1);
             if (next != stops.end()) map.addConnection(*it, *next);
         }
 
@@ -183,7 +184,7 @@ void Interface::exportData(Trip trip, int mode) {
     f.close();
     f.open(lineList);
     if (f.is_open()) {
-        f << "Código da Linha,Nome da Linha" << endl;
+        f << "Codigo da Linha,Nome da Linha" << endl;
         for (auto line : trip.getLinesPath())
             f << line.getCode() << "," << line.getName() << endl;
     }

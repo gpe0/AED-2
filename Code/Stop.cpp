@@ -8,6 +8,7 @@ Stop::Stop(string code, string name, string zone, double latitude, double longit
     this->zone = zone;
     this->latitude = latitude;
     this->longitude = longitude;
+
 }
 
 string Stop::getCode() {

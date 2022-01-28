@@ -29,6 +29,7 @@ class Interface {
     /**Exports the information about a trip to files (csv and html)
      *
      * @param trip trip
+     * @param mode user's choice
      */
     static void exportData(Trip trip, int mode);
 public:

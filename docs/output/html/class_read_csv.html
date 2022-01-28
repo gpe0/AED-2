@@ -72,16 +72,118 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a485af247cc3ab3d91682b05aca93d362"><td class="memItemLeft" align="right" valign="top"><a id="a485af247cc3ab3d91682b05aca93d362" name="a485af247cc3ab3d91682b05aca93d362"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>readStops</b> (vector&lt; <a class="el" href="class_stop.html">Stop</a> &gt; &amp;stops)</td></tr>
+<tr class="memitem:a485af247cc3ab3d91682b05aca93d362"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_read_csv.html#a485af247cc3ab3d91682b05aca93d362">readStops</a> (vector&lt; <a class="el" href="class_stop.html">Stop</a> &gt; &amp;stops)</td></tr>
 <tr class="separator:a485af247cc3ab3d91682b05aca93d362"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8eecf20d4c5a948a47936dbbb41fd49"><td class="memItemLeft" align="right" valign="top"><a id="ae8eecf20d4c5a948a47936dbbb41fd49" name="ae8eecf20d4c5a948a47936dbbb41fd49"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>readLines</b> (vector&lt; <a class="el" href="class_line.html">Line</a> &gt; &amp;lines, bool nightShift)</td></tr>
+<tr class="memitem:ae8eecf20d4c5a948a47936dbbb41fd49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_read_csv.html#ae8eecf20d4c5a948a47936dbbb41fd49">readLines</a> (vector&lt; <a class="el" href="class_line.html">Line</a> &gt; &amp;lines, bool nightShift)</td></tr>
 <tr class="separator:ae8eecf20d4c5a948a47936dbbb41fd49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af78115d1ee6ef6cf2931b724cc9687ed"><td class="memItemLeft" align="right" valign="top"><a id="af78115d1ee6ef6cf2931b724cc9687ed" name="af78115d1ee6ef6cf2931b724cc9687ed"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>readLine</b> (string code, string dir, vector&lt; string &gt; &amp;codes)</td></tr>
+<tr class="memitem:af78115d1ee6ef6cf2931b724cc9687ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_read_csv.html#af78115d1ee6ef6cf2931b724cc9687ed">readLine</a> (string code, string dir, vector&lt; string &gt; &amp;codes)</td></tr>
 <tr class="separator:af78115d1ee6ef6cf2931b724cc9687ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="af78115d1ee6ef6cf2931b724cc9687ed" name="af78115d1ee6ef6cf2931b724cc9687ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af78115d1ee6ef6cf2931b724cc9687ed">&#9670;&nbsp;</a></span>readLine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReadCsv::readLine </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>code</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>codes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads the sequence of stops for a particular line</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">code</td><td>line code </td></tr>
+    <tr><td class="paramname">dir</td><td>line direction </td></tr>
+    <tr><td class="paramname">codes</td><td>list of codes of every stop </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae8eecf20d4c5a948a47936dbbb41fd49" name="ae8eecf20d4c5a948a47936dbbb41fd49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8eecf20d4c5a948a47936dbbb41fd49">&#9670;&nbsp;</a></span>readLines()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReadCsv::readLines </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; <a class="el" href="class_line.html">Line</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>nightShift</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads every line from the lines.csv file from one of the shifts (day or night)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lines</td><td>list of every line </td></tr>
+    <tr><td class="paramname">nightShift</td><td>is it night shift </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a485af247cc3ab3d91682b05aca93d362" name="a485af247cc3ab3d91682b05aca93d362"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a485af247cc3ab3d91682b05aca93d362">&#9670;&nbsp;</a></span>readStops()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReadCsv::readStops </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; <a class="el" href="class_stop.html">Stop</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>stops</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Reads every stop from the stops.csv file</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stops</td><td>list of every stop </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>D:/PROJECTS/AED-2/Code/<a class="el" href="_read_csv_8h_source.html">ReadCsv.h</a></li>
 <li>D:/PROJECTS/AED-2/Code/ReadCsv.cpp</li>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['printtripinfo_0',['printTripInfo',['../class_interface.html#a3623a511c2f8a333d8d3676b5a94dbee',1,'Interface']]]
+  ['line_0',['Line',['../class_line.html#acc11b8a429d8cdd63ba6803dff5602b3',1,'Line::Line()'],['../class_line.html#aa7b1b2ac05c5a9405d93b9ebfa85272a',1,'Line::Line(std::string code, std::string name)']]]
 ];

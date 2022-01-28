@@ -34,23 +34,6 @@ double STCPManager::distanceBetweenTwoPoints(double lat1, double lon1, double la
     return earthR * c;
 }
 
-void STCPManager::setChoice(int choice) {
-    this->choice = choice;
-}
-
-void STCPManager::setWalkableBetweenStops(double walkableBeetweenStops) {
-    this->walkableBetweenStops = walkableBetweenStops;
-}
-
-void STCPManager::setWalkableToFromStops(double walkableToFromStops) {
-    this->walkableToFromStops = walkableToFromStops;
-}
-
-void STCPManager::clearGraph() {
-    delete stops;
-    this->stops = new Graph(stopList.size(), true);
-}
-
 void STCPManager::generateGraph() {
 
 
@@ -75,7 +58,7 @@ void STCPManager::generateGraph() {
         }
     }
 
-    Line l("WALK", "Just Walking");
+    Line l("ANDAR", "Andar a pe");
     for (Stop stop1: stopList) {
         for (Stop stop2: stopList) {
             double dist = distanceBetweenTwoPoints(stop1.getLatitude(), stop1.getLongitude(), stop2.getLatitude(), stop2.getLongitude());
@@ -114,16 +97,25 @@ Trip STCPManager::pathBetweenStops(double lat1, double lon1, string b) {
     list<Line> bestLine;
     list<int> max;
     double bestDistance = INF;
+    int bestZones;
     int difZones;
     for (Stop stop : stopList) {
         double distance = distanceBetweenTwoPoints(lat1, lon1, stop.getLatitude(), stop.getLongitude());
         if (distance >= walkableToFromStops) continue;
         linesPath.clear();
-        list<int> newPath = stops->dijkstra_path(codeToInt[stop.getCode()], codeToInt[b],linesPath, difZones, choice, distance);
-        double newDistance = stops->dijkstra_distance(codeToInt[stop.getCode()], codeToInt[b], linesPath, choice, distance);
+        list<int> newPath;
+        double newDistance;
+        if (choice == 0) {
+            newPath = stops->bfs_path(codeToInt[stop.getCode()], codeToInt[b], linesPath, difZones);
+            newDistance = stops->bfs_distance(codeToInt[stop.getCode()], codeToInt[b]);
+        } else {
+            newPath = stops->dijkstra_path(codeToInt[stop.getCode()], codeToInt[b],linesPath, difZones, choice, distance);
+            newDistance = stops->dijkstra_distance(codeToInt[stop.getCode()], codeToInt[b], linesPath, choice, distance);
+        }
         if (newDistance < bestDistance && !newPath.empty()) {
             bestDistance = newDistance;
             max = newPath;
+            bestZones = difZones;
             bestLine = linesPath;
         }
     }
@@ -132,7 +124,7 @@ Trip STCPManager::pathBetweenStops(double lat1, double lon1, string b) {
         stopsPath.push_back(stopList[element - 1]);
     }
 
-    Trip trip(stopsPath, bestLine, bestDistance, difZones);
+    Trip trip(stopsPath, bestLine, bestDistance, bestZones);
 
     return trip;
 }
@@ -143,6 +135,7 @@ Trip STCPManager::pathBetweenStops(double lat1, double lon1, double lat2, double
     list<Line> bestLine;
     list<int> max;
     double bestDistance = INF;
+    int bestZones;
     int difZones;
     for (Stop stop1 : stopList) {
         double distance1 = distanceBetweenTwoPoints(lat2, lon2, stop1.getLatitude(), stop1.getLongitude());
@@ -151,10 +144,18 @@ Trip STCPManager::pathBetweenStops(double lat1, double lon1, double lat2, double
             double distance2 = distanceBetweenTwoPoints(lat1, lon1, stop2.getLatitude(), stop2.getLongitude());
             if (distance2 >= walkableToFromStops) continue;
             linesPath.clear();
-            list<int> newPath = stops->dijkstra_path(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()], linesPath, difZones, choice, distance2);
-            double newDistance = stops->dijkstra_distance(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()], linesPath, choice ,distance2) + distance1;
+            list<int> newPath;
+            double newDistance;
+            if (choice == 0) {
+                newPath = stops->bfs_path(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()], linesPath, difZones);
+                newDistance = stops->bfs_distance(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()]);
+            } else {
+                newPath = stops->dijkstra_path(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()], linesPath, difZones, choice, distance2);
+                newDistance = stops->dijkstra_distance(codeToInt[stop2.getCode()], codeToInt[stop1.getCode()], linesPath, choice ,distance2) + distance1;
+            }
             if (newDistance < bestDistance && newDistance > 0 && !newPath.empty()) {
                 bestDistance = newDistance;
+                bestZones = difZones;
                 max = newPath;
                 bestLine = linesPath;
             }
@@ -165,7 +166,7 @@ Trip STCPManager::pathBetweenStops(double lat1, double lon1, double lat2, double
         stopsPath.push_back(stopList[element - 1]);
     }
 
-    Trip trip(stopsPath, bestLine, bestDistance, difZones);
+    Trip trip(stopsPath, bestLine, bestDistance, bestZones);
 
     return trip;
 
@@ -178,16 +179,25 @@ Trip STCPManager::pathBetweenStops(string a, double lat2, double lon2) {
     list<int> max;
     double bestDistance = INF;
     int difZones;
+    int bestZones;
     for (Stop stop : stopList) {
         double distance = distanceBetweenTwoPoints(lat2, lon2, stop.getLatitude(), stop.getLongitude());
         if (distance >= walkableToFromStops) continue;
         linesPath.clear();
-        list<int> newPath = stops->dijkstra_path(codeToInt[a], codeToInt[stop.getCode()], linesPath, difZones, choice);
 
-        double newDistance = stops->dijkstra_distance(codeToInt[a], codeToInt[stop.getCode()], linesPath, choice) + distance;
-        if (newDistance < bestDistance && !newPath.empty()) {
+        list<int> newPath;
+        double newDistance;
+        if (choice == 0) {
+            newPath = stops->bfs_path(codeToInt[a], codeToInt[stop.getCode()], linesPath, difZones);
+            newDistance = stops->bfs_distance(codeToInt[a], codeToInt[stop.getCode()]);
+        } else {
+            newPath = stops->dijkstra_path(codeToInt[a], codeToInt[stop.getCode()], linesPath, difZones, choice);
+            newDistance = stops->dijkstra_distance(codeToInt[a], codeToInt[stop.getCode()], linesPath, choice) + distance;
+        }
+       if (newDistance < bestDistance && !newPath.empty()) {
             bestDistance = newDistance;
             max = newPath;
+           bestZones = difZones;
             bestLine = linesPath;
         }
     }
@@ -195,7 +205,7 @@ Trip STCPManager::pathBetweenStops(string a, double lat2, double lon2) {
         stopsPath.push_back(stopList[element - 1]);
     }
 
-    Trip trip(stopsPath, bestLine, bestDistance, difZones);
+    Trip trip(stopsPath, bestLine, bestDistance, bestZones);
 
     return trip;
 }

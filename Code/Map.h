@@ -8,10 +8,30 @@ class Map {
 private:
     std::string html;
 public:
+    /**Instantiates a map
+     *
+     */
     Map();
+
+    /**Adds a route between two stops in the map
+     *
+     * @param stop1 stop 1
+     * @param stop2 stop 2
+     */
     void addConnection(Stop& stop1, Stop& stop2);
+
+    /**Adds a stop in the map
+     *
+     * @param stop stop
+     */
     void addStop(Stop& stop);
+
+    /**Returns the current map
+     *
+     * @return map
+     */
     std::string getHTML();
+
     class InvalidMap {
     private:
         std::string msg;

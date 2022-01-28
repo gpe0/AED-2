@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['minheap_0',['MinHeap',['../class_min_heap.html',1,'']]]
+  ['map_0',['Map',['../class_map.html',1,'']]],
+  ['minheap_1',['MinHeap',['../class_min_heap.html',1,'']]]
 ];
