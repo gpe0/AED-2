@@ -1,5 +1,4 @@
 #include <iostream>
-#include "Code/STCPManager.h"
 #include "Code/Interface.h"
 
 using namespace std;
